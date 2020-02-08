@@ -1,0 +1,55 @@
+<!-- 图片滚动View -->
+<view style="margin:10px;">
+	<swiper class="swiper" autoplay="true" interval="2000">
+		<swiper-item>
+			<image src="https://www.songshui51.com/ad/ppt2/jingtian.jpg"></image>
+		</swiper-item>
+		<swiper-item>
+			<image src="https://www.songshui51.com/ad/ppt2/wahaha.jpg"></image>
+		</swiper-item>
+		<swiper-item>
+			<image src="https://www.songshui51.com/ad/ppt2/quechao.jpg"></image>
+		</swiper-item>
+	</swiper>
+</view>
+
+<!-- 订水信息表单 -->
+<view>
+	<i-row>
+		<i-col span="24" i-class="col-class">
+			<i-input value="{{ value3 }}" value="{{address}}" type="textarea" title="详细地址：" placeholder="请输入详细地址(最多50字)" maxlength="50" />
+		</i-col>
+	</i-row>
+	<i-row>
+		<i-col span="24" i-class="col-class">
+			<i-input value="{{ value2 }}" type="number" title="联系电话：" placeholder="请输入手机号" />
+		</i-col>
+	</i-row>
+	<i-row>
+		<i-col span="24" i-class="col-class">
+			<view class="section">
+				<picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
+					<view class="picker">
+						<i-input value="{{time}}" title="配送时间：" placeholder="点击选择时间" disabled />
+					</view>
+				</picker>
+			</view>
+		</i-col>
+	</i-row>
+	<view>
+		<button class="btn1" bindtap="on_send">
+			<image class='btnImg' src='../../images/send_water.png'></image>
+			<view>立即配送</view>
+		</button>
+	</view>
+</view>
+
+<!-- 底部工具栏View -->
+<view>
+	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
+		<i-tab-bar-item key="buy_water" icon="homepage" current-icon="homepage_fill" title="订水"></i-tab-bar-item>
+		<i-tab-bar-item key="order_water" icon="group" current-icon="group_fill" title="订单"></i-tab-bar-item>
+		<i-tab-bar-item key="remind" icon="remind" current-icon="remind_fill" title="通知"></i-tab-bar-item>
+		<!-- <i-tab-bar-item key="mine" icon="mine" current-icon="mine_fill" title="我的"></i-tab-bar-item> -->
+	</i-tab-bar>
+</view>

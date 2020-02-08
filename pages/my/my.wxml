@@ -1,0 +1,19 @@
+
+<view class="container">
+	<view class="userinfo">
+		<button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+		<block wx:else>
+			<image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+			<text class="userinfo-nickname">{{userInfo.nickName}}</text>
+		</block>
+	</view>
+</view>
+
+<view>
+	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
+		<i-tab-bar-item key="buy_water" icon="homepage" current-icon="homepage_fill" title="订水"></i-tab-bar-item>
+		<i-tab-bar-item key="order_water" icon="group" current-icon="group_fill" title="订单"></i-tab-bar-item>
+		<i-tab-bar-item key="remind" icon="remind" current-icon="remind_fill" title="通知"></i-tab-bar-item>
+		<i-tab-bar-item key="mine" icon="mine" current-icon="mine_fill" title="我的"></i-tab-bar-item>
+	</i-tab-bar>
+</view>

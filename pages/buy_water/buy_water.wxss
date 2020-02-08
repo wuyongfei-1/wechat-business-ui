@@ -1,0 +1,29 @@
+/* pages/buy_water/buy_water.wxss */
+swiper {
+ 
+  width: 100%;
+  height: 400rpx;
+  }
+  swiper image{
+  width: 100%;
+  height: 400rpx;
+   
+  }
+
+  .btn1 {
+    width: 80%;
+    margin-top: 20rpx;
+    background-color: #19be6b!important;
+    color: white;
+    border-radius: 98rpx; 
+  }
+  .btnImg {
+    margin-right: 8rpx;
+    width: 46rpx;
+    height: 46rpx;
+  }
+  .btn1::after {
+    border-radius: 98rpx;
+    border: 0;
+  }
+

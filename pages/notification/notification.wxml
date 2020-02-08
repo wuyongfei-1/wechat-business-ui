@@ -1,0 +1,20 @@
+<view style="margin-top:10px">
+	<i-card title="营业通知" extra="2020-02-08">
+		<view slot="content">因该期间疫情形势较严重，本单位营业时间延迟至3月1日，敬请谅解！</view>
+	</i-card>
+</view>
+
+<view style="margin-top:10px">
+	<i-card title="放假通知" extra="2020-01-23">
+		<view slot="content">本单位放假时间定为1月24日晚上6点-2月5日早上9点，在此期间无法提供订水服务，敬请谅解！</view>
+	</i-card>
+</view>
+
+<view>
+	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
+		<i-tab-bar-item key="buy_water" icon="homepage" current-icon="homepage_fill" title="订水"></i-tab-bar-item>
+		<i-tab-bar-item key="order_water" icon="group" current-icon="group_fill" title="订单"></i-tab-bar-item>
+		<i-tab-bar-item key="remind" icon="remind" current-icon="remind_fill" title="通知"></i-tab-bar-item>
+		<!-- <i-tab-bar-item key="mine" icon="mine" current-icon="mine_fill" title="我的"></i-tab-bar-item> -->
+	</i-tab-bar>
+</view>

@@ -1,0 +1,27 @@
+<view style="margin-top:10px">
+	<i-card title="自来桶装水" extra="正在配送" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
+		<view slot="content">于2月7日 16:14:55 订购一桶水</view>
+		<view slot="footer"><label style="color:red">订单正在配送中，请稍后...</label></view>
+	</i-card>
+</view>
+<view style="margin-top:10px">
+	<i-card title="自来桶装水" extra="正在配送" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
+		<view slot="content">于2月8日 16:14:55 订购一桶水</view>
+		<view slot="footer"><label style="color:red">订单正在配送中，请稍后...</label></view>
+	</i-card>
+</view>
+<view style="margin-top:10px">
+	<i-card title="自来桶装水" extra="已送达" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
+		<view slot="content">于2月6日 16:14:55 订购一桶水</view>
+		<view slot="footer"><label style="color:green">于2月6日 16:20:50 送达指定位置！</label></view>
+	</i-card>
+</view>
+
+<view>
+	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
+		<i-tab-bar-item key="buy_water" icon="homepage" current-icon="homepage_fill" title="订水"></i-tab-bar-item>
+		<i-tab-bar-item key="order_water" icon="group" current-icon="group_fill" title="订单"></i-tab-bar-item>
+		<i-tab-bar-item key="remind" icon="remind" current-icon="remind_fill" title="通知"></i-tab-bar-item>
+		<!-- <i-tab-bar-item key="mine" icon="mine" current-icon="mine_fill" title="我的"></i-tab-bar-item> -->
+	</i-tab-bar>
+</view>
