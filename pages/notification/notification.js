@@ -6,6 +6,7 @@ Page({
    */
   data: {
     current: 'remind',
+    notificationArray: []
   },
   handleChange({ detail }) {
     this.setData({
@@ -32,7 +33,32 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    wx.showLoading({
+      title: '加载中',
+    })
+    var vm = this;
+    wx.request({
+      url: 'http://192.168.0.102/wechat/notification',
+      success: function (obj) {
+        for (var index in obj.data.data) {
+          var data = obj.data.data[index];
+          var createdOn = new String(data.createdOn);
+          obj.data.data[index].createdOn = createdOn.replace('T', ' ').substring(0, 10);
+        }
+        vm.setData({
+          notificationArray: obj.data.data
+        })
+        wx.hideLoading();
+      },
+      fail: function () {
+        wx.hideLoading();
+        wx.showToast({
+          title: '公告获取失败',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+    })
   },
 
   /**

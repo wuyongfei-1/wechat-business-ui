@@ -12,8 +12,10 @@ Page({
     city: '',
     district: '',
     address: '',
+    mobile: '',
     latitude: '',
-    longitude: ''
+    longitude: '',
+    notification: ''
   },
 
   // 配送时间更新函数
@@ -45,17 +47,89 @@ Page({
     // }
   },
 
+  // 表单更新系列函数
+  change_address: function (event) {
+    var vm = this;
+    vm.setData({
+      address: event.detail.detail.value
+    })
+  },
+  change_mobile: function (event) {
+    var vm = this;
+    vm.setData({
+      mobile: event.detail.detail.value
+    })
+  },
+  change_time: function (event) {
+    var vm = this;
+    vm.setData({
+      time: event.detail.detail.value
+    })
+  },
+
   // 确认按钮触发点击事件函数
   on_send: function () {
+    var vm = this;
     wx.showModal({
       title: '下单提示',
       content: '确认下单吗？',
       success: function (res) {
         if (res.confirm) {
-          wx.showToast({
-            title: '下单成功',
-            icon: 'success',
-            duration: 2000
+          // console.log("address" + vm.data.address);
+          // console.log("mobile" + vm.data.mobile);
+          // 表单验证
+          if (vm.data.address === "") {
+            wx.showToast({
+              title: '订水地址有误',
+              icon: 'loading',
+              duration: 500
+            })
+            return;
+          } else if (vm.data.mobile.length != 11) {
+            wx.showToast({
+              title: '联系电话有误',
+              icon: 'loading',
+              duration: 500
+            })
+            return;
+          }
+          wx.showLoading({
+            title: '请求中',
+          })
+          // 发送下单请求到后端
+          wx.request({
+            method: "POST",
+            url: 'http://192.168.0.102/wechat/water_order',
+            data: {
+              uid: wx.getStorageSync('uid'),
+              toAddress: vm.data.address,
+              mobile: vm.data.mobile,
+              orderTime: vm.data.time
+            },
+            success: function (obj) {
+              wx.hideLoading();
+              if (obj.data.code === 200 && obj.data.status === 'OK') {
+                wx.showToast({
+                  title: '下单成功',
+                  icon: 'success',
+                  duration: 2000
+                })
+              } else {
+                wx.showToast({
+                  title: '下单失败',
+                  icon: 'none',
+                  duration: 2000
+                })
+              }
+            },
+            fail: function () {
+              wx.hideLoading();
+              wx.showToast({
+                title: '下单失败',
+                icon: 'none',
+                duration: 2000
+              })
+            }
           })
         } else if (res.cancel) {
           console.log('用户点击取消')
@@ -72,8 +146,6 @@ Page({
         longitude: longitude
       },
       success: function (res) {
-        console.log(res);
-        console.log(res.result.ad_info);
         let province = res.result.ad_info.province
         let city = res.result.ad_info.city
         let district = res.result.ad_info.district;
@@ -86,7 +158,7 @@ Page({
           longitude: longitude,
           address: address
         })
- 
+
       },
       fail: function (res) {
         console.log(res);
@@ -101,7 +173,49 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    wx.showLoading({
+      title: '加载中',
+    })
     var vm = this;
+    wx.login({
+      success(res) {
+        if (res.code) {
+          //发起网络请求
+          wx.request({
+            method: 'POST',
+            url: 'http://192.168.0.102/wechat/account/auth',
+            data: {
+              code: res.code
+            },
+            success: function (obj) {
+              wx.hideLoading();
+              console.log("登录成功！");
+              console.log("userId:" + obj.data.data.id);
+              // 将Uid放到内存中管理
+              wx.setStorage({
+                key: 'uid',
+                data: obj.data.data.id
+              })
+              vm.setData({
+                "notification": wx.getStorageSync('notification')
+              })
+            },
+            fail: function (obj) {
+              wx.hideLoading();
+              wx.showToast({
+                title: '获取用户信息失败，请退出重新登录！',
+                icon: 'none',
+                duration: 2000
+              })
+              console.log("获取用户信息失败，请退出重新登录！");
+            }
+          })
+        } else {
+          wx.hideLoading();
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    })
     qqmapsdk = new QQMapWX({
       key: 'HYIBZ-DW2ED-GSI4L-HZ3LK-TOHY6-ZVBZS' //这里自己的key秘钥进行填充
     });

@@ -2,27 +2,35 @@
 <view style="margin:10px;">
 	<swiper class="swiper" autoplay="true" interval="2000">
 		<swiper-item>
-			<image src="https://www.songshui51.com/ad/ppt2/jingtian.jpg"></image>
+			<image src="../../images/header1.jpg"></image>
 		</swiper-item>
 		<swiper-item>
-			<image src="https://www.songshui51.com/ad/ppt2/wahaha.jpg"></image>
+			<image src="../../images/header2.jpg"></image>
 		</swiper-item>
 		<swiper-item>
-			<image src="https://www.songshui51.com/ad/ppt2/quechao.jpg"></image>
+			<image src="../../images/header3.jpg"></image>
+		</swiper-item>
+		<swiper-item>
+			<image src="../../images/header4.jpg"></image>
 		</swiper-item>
 	</swiper>
 </view>
+
+<!-- 系统滚动公告 -->
+<i-notice-bar wx:if="{{notification}}" icon="systemprompt" loop>
+    {{notification}}
+</i-notice-bar>
 
 <!-- 订水信息表单 -->
 <view>
 	<i-row>
 		<i-col span="24" i-class="col-class">
-			<i-input value="{{ value3 }}" value="{{address}}" type="textarea" title="详细地址：" placeholder="请输入详细地址(最多50字)" maxlength="50" />
+			<i-input bind:change="change_address" value="{{address}}" type="textarea" title="详细地址：" placeholder="请输入详细地址(最多50字)" maxlength="50" />
 		</i-col>
 	</i-row>
 	<i-row>
 		<i-col span="24" i-class="col-class">
-			<i-input value="{{ value2 }}" type="number" title="联系电话：" placeholder="请输入手机号" />
+			<i-input bind:change="change_mobile" value="{{ mobile }}" maxlength="11" type="number" title="联系电话：" placeholder="请输入手机号" />
 		</i-col>
 	</i-row>
 	<i-row>
@@ -30,7 +38,7 @@
 			<view class="section">
 				<picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
 					<view class="picker">
-						<i-input value="{{time}}" title="配送时间：" placeholder="点击选择时间" disabled />
+						<i-input bind:change="change_time" value="{{time}}" title="配送时间：" placeholder="点击选择时间" disabled />
 					</view>
 				</picker>
 			</view>

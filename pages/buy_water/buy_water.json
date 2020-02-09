@@ -6,6 +6,7 @@
     "i-col": "../../dist/col/index",
     "i-input": "../../dist/input/index",
     "i-button": "../../dist/button/index",
-    "i-modal": "../../dist/modal/index"
+    "i-modal": "../../dist/modal/index",
+    "i-notice-bar": "../../dist/notice-bar/index"
   }
 }

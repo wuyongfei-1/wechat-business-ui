@@ -1,10 +1,15 @@
-<view style="margin-top:10px">
-	<i-card title="自来桶装水" extra="正在配送" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
-		<view slot="content">于2月7日 16:14:55 订购一桶水</view>
-		<view slot="footer"><label style="color:red">订单正在配送中，请稍后...</label></view>
+<view wx:for="{{orderArray}}" style="margin-top:10px">
+	<i-card title="自来桶装水" extra="{{!item.isArrived ? '正在配送':'已送达'}}" thumb="https://bkimg.cdn.bcebos.com/pic/203fb80e7bec54e722e34457b8389b504fc26a6f?x-bce-process=image/watermark,g_7,image_d2F0ZXIvYmFpa2UyMjA=,xp_5,yp_5">
+		<view slot="content">
+			<i-notice-bar icon="systemprompt" loop speed="1200">
+				手机号：{{item.mobile}} 于 {{item.createdOn}} 订购一桶水，送达 {{item.toAddress}}
+			</i-notice-bar>
+		</view>
+		<view wx:if="{{!item.isArrived}}" slot="footer"><label style="color:red">订单正在配送中，请稍后...</label></view>
+		<view wx:else slot="footer"><label style="color:green">于 {{item.arrivedDateTime}} 送达指定位置！</label></view>
 	</i-card>
 </view>
-<view style="margin-top:10px">
+<!-- <view style="margin-top:10px">
 	<i-card title="自来桶装水" extra="正在配送" thumb="https://i.loli.net/2017/08/21/599a521472424.jpg">
 		<view slot="content">于2月8日 16:14:55 订购一桶水</view>
 		<view slot="footer"><label style="color:red">订单正在配送中，请稍后...</label></view>
@@ -15,7 +20,7 @@
 		<view slot="content">于2月6日 16:14:55 订购一桶水</view>
 		<view slot="footer"><label style="color:green">于2月6日 16:20:50 送达指定位置！</label></view>
 	</i-card>
-</view>
+</view> -->
 
 <view>
 	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">

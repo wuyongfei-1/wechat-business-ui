@@ -1,4 +1,10 @@
-<view style="margin-top:10px">
+<view wx:for="{{notificationArray}}" style="margin-top:10px">
+	<i-card title="{{item.title}}" extra="{{item.createdOn}}">
+		<view slot="content">{{item.content}}</view>
+	</i-card>
+</view>
+
+<!-- <view style="margin-top:10px">
 	<i-card title="营业通知" extra="2020-02-08">
 		<view slot="content">因该期间疫情形势较严重，本单位营业时间延迟至3月1日，敬请谅解！</view>
 	</i-card>
@@ -8,7 +14,7 @@
 	<i-card title="放假通知" extra="2020-01-23">
 		<view slot="content">本单位放假时间定为1月24日晚上6点-2月5日早上9点，在此期间无法提供订水服务，敬请谅解！</view>
 	</i-card>
-</view>
+</view> -->
 
 <view>
 	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
