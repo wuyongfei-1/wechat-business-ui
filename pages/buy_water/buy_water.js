@@ -99,7 +99,7 @@ Page({
           // 发送下单请求到后端
           wx.request({
             method: "POST",
-            url: 'http://192.168.0.102/wechat/water_order',
+            url: 'https://p5c.top/wechat/water_order',
             data: {
               uid: wx.getStorageSync('uid'),
               toAddress: vm.data.address,
@@ -112,7 +112,14 @@ Page({
                 wx.showToast({
                   title: '下单成功',
                   icon: 'success',
-                  duration: 2000
+                  duration: 2000,
+                  success: function() {
+                    setTimeout(function() {
+                      wx.redirectTo({
+                        url: '../order_water/order_water',
+                      })
+                    }, 1200)
+                  }
                 })
               } else {
                 wx.showToast({
@@ -183,7 +190,7 @@ Page({
           //发起网络请求
           wx.request({
             method: 'POST',
-            url: 'http://192.168.0.102/wechat/account/auth',
+            url: 'https://p5c.top/wechat/account/auth',
             data: {
               code: res.code
             },

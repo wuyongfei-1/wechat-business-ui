@@ -41,7 +41,7 @@ Page({
     })
     var vm = this;
     wx.request({
-      url: 'http://192.168.0.102/wechat/water_order?accountId=' + wx.getStorageSync('uid'),
+      url: 'https://p5c.top/wechat/water_order?accountId=' + wx.getStorageSync('uid'),
       success: function (obj) {
         for (var index in obj.data.data) {
           var data = obj.data.data[index];

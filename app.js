@@ -8,7 +8,7 @@ App({
 
     // 获取系统公告，用于app置顶
     wx.request({
-      url: 'http://192.168.0.102/wechat/notification',
+      url: 'https://p5c.top/wechat/notification',
       success: function (obj) {
         for (var index in obj.data.data) {
           var data = obj.data.data[index];

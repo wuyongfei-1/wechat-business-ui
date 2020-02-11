@@ -1,3 +1,8 @@
+<view wx:if="{{notificationArray.length == 0}}" style="margin-top:10px;width:100%;height:100%;text-align:center;">
+	<image style='width:30%; height:30%' class="infoImage" src="../../images/notification_not_found.png" mode='widthFix'>
+	</image>
+</view>
+
 <view wx:for="{{notificationArray}}" style="margin-top:10px">
 	<i-card title="{{item.title}}" extra="{{item.createdOn}}">
 		<view slot="content">{{item.content}}</view>
