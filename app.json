@@ -2,7 +2,6 @@
   "pages": [
     "pages/buy_water/buy_water",
     "pages/order_water/order_water",
-    "pages/index/index",
     "pages/logs/logs",
     "pages/notification/notification",
     "pages/my/my"
@@ -10,7 +9,7 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#00BFFF",
-    "navigationBarTitleText": "桶装自来水配送站",
+    "navigationBarTitleText": "优净水舍",
     "navigationBarTextStyle": "black"
   },
   "style": "v2",

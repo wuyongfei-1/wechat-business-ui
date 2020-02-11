@@ -1,5 +1,5 @@
-const app = getApp();
 var QQMapWX = require('../../js/qqmap-wx-jssdk.js');
+var util = require('../../utils/util.js');
 var qqmapsdk;
 Page({
   /**
@@ -7,7 +7,7 @@ Page({
    */
   data: {
     current: 'buy_water', // 底部工具默认显示key
-    time: '12:01', // 配送时间默认项
+    time: '00:00', // 配送时间默认项
     province: '',
     city: '',
     district: '',
@@ -20,7 +20,7 @@ Page({
 
   // 配送时间更新函数
   bindTimeChange: function (e) {
-    console.log('picker发送选择改变，携带值为', e.detail.value)
+    // console.log('picker发送选择改变，携带值为', e.detail.value)
     this.setData({
       time: e.detail.value
     })
@@ -40,11 +40,6 @@ Page({
         url: '../notification/notification',
       })
     }
-    // else if (detail.key === 'mine') {
-    //   wx.redirectTo({
-    //     url: '../my/my',
-    //   })
-    // }
   },
 
   // 表单更新系列函数
@@ -71,16 +66,14 @@ Page({
   on_send: function () {
     var vm = this;
     wx.showModal({
-      title: '下单提示',
-      content: '确认下单吗？',
+      title: '预定提示',
+      content: '确认预定吗？',
       success: function (res) {
         if (res.confirm) {
-          // console.log("address" + vm.data.address);
-          // console.log("mobile" + vm.data.mobile);
           // 表单验证
           if (vm.data.address === "") {
             wx.showToast({
-              title: '订水地址有误',
+              title: '地址有误',
               icon: 'loading',
               duration: 500
             })
@@ -110,7 +103,7 @@ Page({
               wx.hideLoading();
               if (obj.data.code === 200 && obj.data.status === 'OK') {
                 wx.showToast({
-                  title: '下单成功',
+                  title: '预定成功',
                   icon: 'success',
                   duration: 2000,
                   success: function() {
@@ -123,7 +116,7 @@ Page({
                 })
               } else {
                 wx.showToast({
-                  title: '下单失败',
+                  title: '预定失败',
                   icon: 'none',
                   duration: 2000
                 })
@@ -132,14 +125,14 @@ Page({
             fail: function () {
               wx.hideLoading();
               wx.showToast({
-                title: '下单失败',
+                title: '预定失败',
                 icon: 'none',
                 duration: 2000
               })
             }
           })
         } else if (res.cancel) {
-          console.log('用户点击取消')
+          // console.log('用户点击取消')
         }
       }
     })
@@ -168,7 +161,7 @@ Page({
 
       },
       fail: function (res) {
-        console.log(res);
+        // console.log(res);
       },
       complete: function (res) {
         // console.log(res);
@@ -180,14 +173,20 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var time = util.formatTime(new Date());
+    this.setData({
+      time: time.substring(11, 16)
+    });
     wx.showLoading({
       title: '加载中',
     })
     var vm = this;
+    vm.setData({
+      "notification": wx.getStorageSync('notification')
+    })
     wx.login({
       success(res) {
         if (res.code) {
-          //发起网络请求
           wx.request({
             method: 'POST',
             url: 'https://p5c.top/wechat/account/auth',
@@ -196,15 +195,10 @@ Page({
             },
             success: function (obj) {
               wx.hideLoading();
-              console.log("登录成功！");
-              console.log("userId:" + obj.data.data.id);
               // 将Uid放到内存中管理
               wx.setStorage({
                 key: 'uid',
                 data: obj.data.data.id
-              })
-              vm.setData({
-                "notification": wx.getStorageSync('notification')
               })
             },
             fail: function (obj) {
@@ -214,12 +208,12 @@ Page({
                 icon: 'none',
                 duration: 2000
               })
-              console.log("获取用户信息失败，请退出重新登录！");
+              // console.log("获取用户信息失败，请退出重新登录！");
             }
           })
         } else {
           wx.hideLoading();
-          console.log('登录失败！' + res.errMsg)
+          // console.log('登录失败！' + res.errMsg)
         }
       }
     })

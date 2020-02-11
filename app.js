@@ -5,24 +5,31 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+    // 获取系统公告，用于app页面的消息置顶
+    setInterval(function () {
+      wx.request({
+        url: 'https://p5c.top/wechat/notification',
+        success: function (obj) {
+          for (var index in obj.data.data) {
+            var data = obj.data.data[index];
+            var createdOn = new String(data.createdOn);
+            obj.data.data[index].createdOn = createdOn.replace('T', ' ').substring(0, 10);
+          }
+          if (obj.data.data.length > 0) {
+            wx.setStorage({
+              data: obj.data.data[0].title + "：" + obj.data.data[0].content,
+              key: 'notification',
+            })
+          } else {
+            wx.setStorage({
+              data: '',
+              key: 'notification',
+            })
+          }
+        }
+      })
+    }, 10000);
 
-    // 获取系统公告，用于app置顶
-    wx.request({
-      url: 'https://p5c.top/wechat/notification',
-      success: function (obj) {
-        for (var index in obj.data.data) {
-          var data = obj.data.data[index];
-          var createdOn = new String(data.createdOn);
-          obj.data.data[index].createdOn = createdOn.replace('T', ' ').substring(0, 10);
-        }
-        if(obj.data.data.length > 0) {
-          wx.setStorage({
-            data: obj.data.data[0].title + "：" + obj.data.data[0].content,
-            key: 'notification',
-          })
-        }
-      }
-    })
 
     // 登录
     wx.login({

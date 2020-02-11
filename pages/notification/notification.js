@@ -22,11 +22,6 @@ Page({
         url: '../buy_water/buy_water',
       })
     } 
-    // else if (detail.key === 'mine') {
-    //   wx.redirectTo({
-    //     url: '../my/my',
-    //   })
-    // }
   },
 
   /**

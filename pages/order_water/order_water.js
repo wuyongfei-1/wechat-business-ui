@@ -9,6 +9,7 @@ Page({
   data: {
     current: 'order_water',
     orderArray: [],
+    notification: ''
   },
 
   handleChange({ detail }) {
@@ -25,12 +26,6 @@ Page({
         url: '../notification/notification',
       })
     }
-    // else if (detail.key === 'mine') {
-    //   wx.redirectTo({
-    //     url: '../my/my',
-    //   })
-    // }
-
   },
   /**
    * 生命周期函数--监听页面加载
@@ -40,6 +35,9 @@ Page({
       title: '加载中',
     })
     var vm = this;
+    vm.setData({
+      "notification": wx.getStorageSync('notification')
+    })
     wx.request({
       url: 'https://p5c.top/wechat/water_order?accountId=' + wx.getStorageSync('uid'),
       success: function (obj) {
@@ -58,7 +56,7 @@ Page({
       fail: function () {
         wx.hideLoading();
         wx.showToast({
-          title: '订单获取失败',
+          title: '信息获取失败',
           icon: 'none',
           duration: 2000
         })
