@@ -10,6 +10,27 @@ swiper {
    
   }
 
+  .row{
+    display: flex;
+    align-items: center;
+  }
+  .mobileVerifyBtn {
+    /* position: absolute;
+    right: 0;
+    top: 0; */
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+    background-color: red;
+    /* padding-left: 5rpx;
+    padding-right: 5rpx; */
+    /* color: #bbb; */
+    width: 55px;
+    /* height: 45rpx; */
+    /* font-size: 26rpx; */
+    /* height: 80rpx;
+    line-height: 80rpx; */
+  }
   .btn1 {
     width: 80%;
     margin-top: 20rpx;

@@ -1,28 +1,31 @@
 var QQMapWX = require('../../js/qqmap-wx-jssdk.js');
 var util = require('../../utils/util.js');
 var qqmapsdk;
+const { $Toast } = require('../../dist/base/index');
 Page({
   /**
    * 页面的初始数据
    */
   data: {
     current: 'buy_water', // 底部工具默认显示key
-    time: '00:00', // 配送时间默认项
-    province: '',
-    city: '',
-    district: '',
+    smscodeMes: '发送验证码',
+    isDisableBtn: false,
+    expectTime: '12:00', // 配送时间默认项
     address: '',
     mobile: '',
-    latitude: '',
-    longitude: '',
-    notification: ''
+    sms: '',
+    notification: '',
+    minHour: 0,
+    maxHour: 17,
+    minminute: 0
   },
 
   // 配送时间更新函数
-  bindTimeChange: function (e) {
+  bindTimeChange: function (event) {
     // console.log('picker发送选择改变，携带值为', e.detail.value)
     this.setData({
-      time: e.detail.value
+      // time: e.detail.value,
+      expectTime: event.detail
     })
   },
 
@@ -46,19 +49,100 @@ Page({
   change_address: function (event) {
     var vm = this;
     vm.setData({
-      address: event.detail.detail.value
+      address: event.detail
     })
   },
   change_mobile: function (event) {
     var vm = this;
     vm.setData({
-      mobile: event.detail.detail.value
+      mobile: event.detail
+    })
+  },
+  change_sms: function (event) {
+    var vm = this;
+    vm.setData({
+      sms: event.detail
     })
   },
   change_time: function (event) {
     var vm = this;
+    var time = parseInt(util.formatTime(new Date()).substring(11, 16).substring(0, 2)) + 1;
+    var expectTime = event.detail.value;
+    if (time < 8 || time > 18) {
+      expectTime = "次日 " + expectTime;
+    }
     vm.setData({
-      time: event.detail.detail.value
+      expectTime: expectTime
+    })
+  },
+
+  // 发送短信的验证码
+  send_sms_code: function () {
+    var vm = this;
+    if (vm.data.isDisableBtn === true) {
+      return;
+    }
+    // 表单验证
+    if (vm.data.address === "") {
+      $Toast({
+        content: '地址有误',
+        type: 'warning'
+      });
+      return;
+    } else if (vm.data.mobile.length != 11) {
+      $Toast({
+        content: '联系电话有误',
+        type: 'warning'
+      });
+      return;
+    }
+    // 倒计时
+    var time = setInterval(function () {
+      var smsMes = vm.data.smscodeMes === "发送验证码" ? 60 : vm.data.smscodeMes;
+      smsMes = smsMes - 1;
+      var isDisableBtn = true;
+      if (smsMes == 0) {
+        smsMes = "发送验证码";
+        isDisableBtn = false;
+        clearInterval(time);
+      }
+      vm.setData({
+        smscodeMes: smsMes,
+        isDisableBtn: isDisableBtn
+      })
+    }, 1000)
+    wx.request({
+      method: "POST",
+      url: 'https://p5c.top/wechat/smscode/' + vm.data.mobile,
+      success: function (obj) {
+        if (obj.data.code != 200 || obj.data.status != 'OK') {
+          $Toast({
+            content: '发送过于频繁，请稍后再次发送',
+            type: 'error'
+          });
+          clearInterval(time);
+          vm.setData({
+            smscodeMes: "发送验证码",
+            isDisableBtn: false
+          })
+          return;
+        }
+        // $Toast({
+        //   content: '发送成功',
+        //   type: 'success'
+        // });
+      },
+      fail: function () {
+        $Toast({
+          content: '发送失败',
+          type: 'error'
+        });
+        clearInterval(time);
+        vm.setData({
+          smscodeMes: "发送验证码",
+          isDisableBtn: false
+        })
+      }
     })
   },
 
@@ -72,22 +156,26 @@ Page({
         if (res.confirm) {
           // 表单验证
           if (vm.data.address === "") {
-            wx.showToast({
-              title: '地址有误',
-              icon: 'loading',
-              duration: 500
-            })
+            $Toast({
+              content: '地址有误',
+              type: 'warning'
+            });
             return;
           } else if (vm.data.mobile.length != 11) {
-            wx.showToast({
-              title: '联系电话有误',
-              icon: 'loading',
-              duration: 500
-            })
+            $Toast({
+              content: '联系电话有误',
+              type: 'warning'
+            });
+            return;
+          } else if (vm.data.sms.length != 4) {
+            $Toast({
+              content: '验证码有误',
+              type: 'warning'
+            });
             return;
           }
           wx.showLoading({
-            title: '请求中',
+            title: '预定中',
           })
           // 发送下单请求到后端
           wx.request({
@@ -97,7 +185,8 @@ Page({
               uid: wx.getStorageSync('uid'),
               toAddress: vm.data.address,
               mobile: vm.data.mobile,
-              orderTime: vm.data.time
+              code: vm.data.sms,
+              orderTime: vm.data.expectTime
             },
             success: function (obj) {
               wx.hideLoading();
@@ -106,29 +195,37 @@ Page({
                   title: '预定成功',
                   icon: 'success',
                   duration: 2000,
-                  success: function() {
-                    setTimeout(function() {
+                  success: function () {
+                    setTimeout(function () {
                       wx.redirectTo({
                         url: '../order_water/order_water',
                       })
                     }, 1200)
                   }
                 })
+              } else if (obj.data.code === 13001) {
+                $Toast({
+                  content: '验证码失效，预定失败，请重新发送',
+                  type: 'error'
+                });
+              }else if (obj.data.code === 13002) {
+                $Toast({
+                  content: '验证码有误，预定失败',
+                  type: 'error'
+                });
               } else {
-                wx.showToast({
-                  title: '预定失败',
-                  icon: 'none',
-                  duration: 2000
-                })
+                $Toast({
+                  content: '预定失败',
+                  type: 'error'
+                });
               }
             },
             fail: function () {
               wx.hideLoading();
-              wx.showToast({
-                title: '预定失败',
-                icon: 'none',
-                duration: 2000
-              })
+              $Toast({
+                content: '预定失败',
+                type: 'error'
+              });
             }
           })
         } else if (res.cancel) {
@@ -146,19 +243,10 @@ Page({
         longitude: longitude
       },
       success: function (res) {
-        let province = res.result.ad_info.province
-        let city = res.result.ad_info.city
-        let district = res.result.ad_info.district;
         let address = res.result.address;
         vm.setData({
-          province: province,
-          city: city,
-          district: district,
-          latitude: latitude,
-          longitude: longitude,
           address: address
         })
-
       },
       fail: function (res) {
         // console.log(res);
@@ -173,16 +261,26 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var time = util.formatTime(new Date());
-    this.setData({
-      time: time.substring(11, 16)
-    });
     wx.showLoading({
       title: '加载中',
     })
+    var time = parseInt(util.formatTime(new Date()).substring(11, 16).substring(0, 2)) + 1;
+    var minute = util.formatTime(new Date()).substring(11, 16).substring(3);
+    var minHours = 0;
+    var expectTime = "";
+    if (time >= 8 && time < 18) {
+      minHours = time;
+      expectTime = minHours + ":" + minute;
+    } else {
+      minHours = 8;
+      expectTime = "次日 8:30";
+    }
     var vm = this;
     vm.setData({
-      "notification": wx.getStorageSync('notification')
+      "notification": wx.getStorageSync('notification'),
+      "expectTime": expectTime,
+      "minHour": minHours,
+      "minminute": minute
     })
     wx.login({
       success(res) {
@@ -203,11 +301,10 @@ Page({
             },
             fail: function (obj) {
               wx.hideLoading();
-              wx.showToast({
-                title: '获取用户信息失败，请退出重新登录！',
-                icon: 'none',
-                duration: 2000
-              })
+              $Toast({
+                content: '获取用户信息失败，请退出重新登录！',
+                type: 'error'
+              });
               // console.log("获取用户信息失败，请退出重新登录！");
             }
           })
@@ -225,8 +322,6 @@ Page({
       success(res) {
         const latitude = res.latitude
         const longitude = res.longitude
-        const speed = res.speed
-        const accuracy = res.accuracy
         vm.getLocal(latitude, longitude);
       }
     })

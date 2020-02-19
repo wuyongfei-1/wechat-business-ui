@@ -8,6 +8,14 @@
     "i-button": "../../dist/button/index",
     "i-modal": "../../dist/modal/index",
     "i-notice-bar": "../../dist/notice-bar/index",
-    "i-load-more": "../../dist/load-more/index"
+    "i-load-more": "../../dist/load-more/index",
+    "i-toast": "../../dist/toast/index",
+    "van-field": "../../vant_dist/field/index",
+    "van-button": "../../vant_dist/button/index",
+    "van-row": "../../vant_dist/row/index",
+    "van-col": "../../vant_dist/col/index",
+    "van-datetime-picker": "../../vant_dist/datetime-picker/index",
+    "van-popup": "../../vant_dist/popup/index",
+    "van-toast": "../../vant_dist/toast/index"
   }
 }

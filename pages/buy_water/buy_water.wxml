@@ -23,36 +23,46 @@
 
 <!-- 订水信息表单 -->
 <view>
-	<i-row>
-		<i-col span="24" i-class="col-class">
-			<i-input bind:change="change_address" value="{{address}}" type="textarea" title="详细地址：" placeholder="请输入详细地址(最多50字)" maxlength="50" />
-		</i-col>
-	</i-row>
-	<i-row>
-		<i-col span="24" i-class="col-class">
-			<i-input bind:change="change_mobile" value="{{ mobile }}" maxlength="11" type="number" title="联系电话：" placeholder="请输入手机号" />
-		</i-col>
-	</i-row>
-	<i-row>
-		<i-col span="24" i-class="col-class">
+	<van-row>
+		<van-col span="24">
+			<van-field required label="详细地址：" value="{{ address }}" type="text" border="{{ true }}" bindchange="change_address" maxlength="50" />
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="24">
+			<van-field required value="{{ mobile }}" label="联系电话：" placeholder="请输入手机号" border="{{ true }}" type="number" maxlength="11" bindinput="change_mobile" />
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="24">
+			<van-field required bindinput="change_sms" value="{{ sms }}" maxlength="4" center clearable type="number" label="验证码：" placeholder="请输入短信验证码" border="{{ true }}" use-button-slot>
+				<van-button slot="button" disabled="{{isDisableBtn}}" size="small" bindtap="send_sms_code" type="primary">{{smscodeMes == "发送验证码" ? smscodeMes : "（" + smscodeMes + "  秒）后重新发送"}}</van-button>
+			</van-field>
+			<i-toast id="toast" />
+		</van-col>
+	</van-row>
+
+	<van-row>
+		<van-col span="24">
 			<view class="section">
-				<picker mode="time" value="{{time}}" start="09:01" end="21:01" bindchange="bindTimeChange">
+				<picker mode="time" value="{{expectTime}}" start="{{minHour}}:{{minminute}}" end="18:00" bindchange="change_time">
 					<view class="picker">
-						<i-input bind:change="change_time" value="{{time}}" title="预计时间：" placeholder="点击选择时间" disabled />
+						<van-field label="预计时间：" value="{{ expectTime }} 将送达" placeholder="点击选择预计时间" border="{{ true }}" bind:change="change_time" disabled />
 					</view>
 				</picker>
 			</view>
-		</i-col>
-	</i-row>
-	<view>
-		<button class="btn1" bindtap="on_send">
-			<image class='btnImg' src='../../images/send_water.png'></image>
-			<view>立即预定</view>
-		</button>
-	</view>
-	<view>
-		<i-load-more tip="马上预定，水到付款" loading="{{ false }}" />
-	</view>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="24">
+		<view style="height:10px"></view>
+			<van-button style="margin-top:10px" size="large" round block icon="../../images/send_water.png" type="primary" bindtap="on_send">立即预定</van-button>
+		</van-col>
+	</van-row>
+</view>
+<view style="height:10px"></view>
+<view>
+	<i-load-more tip="马上预定，水到付款" loading="{{ false }}" />
 </view>
 
 <!-- 底部工具栏View -->

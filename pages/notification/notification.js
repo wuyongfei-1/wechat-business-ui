@@ -1,4 +1,5 @@
 // pages/notification/notification.js
+const { $Toast } = require('../../dist/base/index');
 Page({
 
   /**
@@ -47,11 +48,10 @@ Page({
       },
       fail: function () {
         wx.hideLoading();
-        wx.showToast({
-          title: '公告获取失败',
-          icon: 'none',
-          duration: 2000
-        })
+        $Toast({
+          content: '公告获取失败',
+          type: 'error'
+        });
       }
     })
   },

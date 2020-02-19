@@ -1,6 +1,7 @@
 // pages/order_water/order_water.js
 var util = require('../../utils/util.js')
 time: util.formatTime(new Date)
+const { $Toast } = require('../../dist/base/index');
 Page({
 
   /**
@@ -44,9 +45,9 @@ Page({
         for (var index in obj.data.data) {
           var data = obj.data.data[index];
           var createdOn = new String(data.createdOn);
-          var arrivedDateTime = new String(data.arrivedDateTime);
+          var handleCompleteDateTime = new String(data.handleCompleteDateTime);
           obj.data.data[index].createdOn = createdOn.replace('T', ' ').substring(0, createdOn.lastIndexOf('.'));
-          obj.data.data[index].arrivedDateTime = arrivedDateTime.replace('T', ' ').substring(0, createdOn.lastIndexOf('.'));
+          obj.data.data[index].handleCompleteDateTime = handleCompleteDateTime.replace('T', ' ').substring(0, createdOn.lastIndexOf('.'));
         }
         vm.setData({
           orderArray: obj.data.data
@@ -55,11 +56,10 @@ Page({
       },
       fail: function () {
         wx.hideLoading();
-        wx.showToast({
-          title: '信息获取失败',
-          icon: 'none',
-          duration: 2000
-        })
+        $Toast({
+          content: '信息获取失败',
+          type: 'error'
+        });
       }
     })
   },

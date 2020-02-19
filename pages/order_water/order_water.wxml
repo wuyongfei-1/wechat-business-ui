@@ -1,35 +1,41 @@
 <!-- 系统滚动公告 -->
 <i-notice-bar wx:if="{{notification}}" icon="systemprompt" loop>
-    {{notification}}
+	{{notification}}
 </i-notice-bar>
 
 <view wx:if="{{orderArray.length == 0}}" style="margin-top:10px;width:100%;height:100%;text-align:center;">
 	<image style='width:30%;height:30%' class="infoImage" src="../../images/order_not_found.png" mode='widthFix'>
 	</image>
 	<view>
-		<text style="text-align:center;margin-top:15px;">暂无预定！</text>
+		<text style="text-align:center;margin-top:15px;">暂无预定，快去预定吧！</text>
 	</view>
 </view>
 
 <view wx:for="{{orderArray}}" style="margin-top:15px">
-	<i-card title="桶装自来水" extra="{{!item.isArrived ? '预定中':'预定完成'}}" thumb="https://bkimg.cdn.bcebos.com/pic/203fb80e7bec54e722e34457b8389b504fc26a6f?x-bce-process=image/watermark,g_7,image_d2F0ZXIvYmFpa2UyMjA=,xp_5,yp_5">
+	<i-card title="桶装自来水" extra="{{item.status == 1 ? '预定完成，待送达' : item.status == 2 ? '已送达' : '已取消'}}" thumb="https://bkimg.cdn.bcebos.com/pic/203fb80e7bec54e722e34457b8389b504fc26a6f?x-bce-process=image/watermark,g_7,image_d2F0ZXIvYmFpa2UyMjA=,xp_5,yp_5">
 		<view slot="content">
-		<!-- {{item.mobile}} 于 {{item.createdOn}} 预定桶装自来水 -->
-		<view>
-		预定时间： {{item.createdOn}}
+			<!-- {{item.mobile}} 于 {{item.createdOn}} 预定桶装自来水 -->
+			<view>
+				预定时间： {{item.createdOn}}
+			</view>
+			<view>
+				联系电话： {{item.mobile}}
+			</view>
+			<view>
+				送达地址： {{item.toAddress}}
+			</view>
+			<view>
+				预计时间： {{item.orderTime}}
+			</view>
 		</view>
-		<view>
-		联系电话： {{item.mobile}}
-		</view>
-		<view>
-		送达： {{item.toAddress}}
-		</view>
-		</view>
-		<view wx:if="{{!item.isArrived}}" slot="footer"><label style="color:red">正在送达中，请稍后...</label></view>
-		<view wx:else slot="footer"><label style="color:green">于 {{item.arrivedDateTime}} 送达指定位置！</label></view>
+		<view wx:if="{{item.status == 1 && item.isHandleComplete == false}}" slot="footer"><label style="color:red">正在送达中，请稍后...</label></view>
+		<view wx:if="{{item.status == 2 && item.isHandleComplete == true}}" slot="footer"><label style="color:green">于 {{item.handleCompleteDateTime}} 送达指定位置！</label></view>
+		<view wx:if="{{item.status == 3 && item.isHandleComplete == true}}" slot="footer"><label style="color:red">{{item.cancelReason}}</label></view>
 	</i-card>
 </view>
 
+<i-toast id="toast" />
+<view style="height:60px"></view>
 <view>
 	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
 		<i-tab-bar-item key="buy_water" icon="homepage" current-icon="homepage_fill" title="预定"></i-tab-bar-item>

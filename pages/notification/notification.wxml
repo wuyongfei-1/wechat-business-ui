@@ -8,6 +8,7 @@
 		<view slot="content">{{item.content}}</view>
 	</i-card>
 </view>
+<i-toast id="toast" />
 
 <view>
 	<i-tab-bar fixed="true" current="{{ current }}" color="#f759ab" bindchange="handleChange">
